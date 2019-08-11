@@ -1,7 +1,8 @@
 const consulta = require("./consulta.controller")
 
 function searchRuc(req, res) {
-    consulta.getSunatInformation(req.params.ruc, function (error, data) {
+    let additional = (req.params.ruc).trim().startsWith('1');
+    consulta.getSunatInformation(req.params.ruc, additional, function (error, data) {
         if (error) {
             res.status(500).send(error);
         }
@@ -10,7 +11,7 @@ function searchRuc(req, res) {
 }
 
 function searchMultiRuc(req, res) {
-    consulta.getSunatInformation(req.body, function (error, data) {
+    consulta.getSunatInformation(req.body, true, function (error, data) {
         if (error) {
             res.status(500).send(error);
         }
@@ -32,24 +33,3 @@ module.exports = {
     searchDni,
     searchMultiRuc
 }
-
-// consulta.getSunatInformation("20131312955", function (error, data) {
-//     if (error) {
-//         console.log(error);
-//     }
-//     console.log(data);
-// });
-
-// consulta.getSunatInformation(['20101266819', '20508316985', '20537979381'], function (error, data) {
-//     if (error) {
-//         console.log(error);
-//     }
-//     console.log(data);
-// });
-
-// consulta.getJneInformation("46658592", function (error, data) {
-//     if (error) {
-//         console.log(error);
-//     }
-//     console.log(data);
-// });

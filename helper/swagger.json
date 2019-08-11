@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Consultas de DNI y RUC - **Perú**\n\n## GraphQL\nEndpoint `api/graphql`\n",
+        "description": "Consultas de DNI y RUC - **Perú**",
         "version": "1.0.0",
         "title": "Consulta Ruc y Dni - Perú",
         "termsOfService": "http://swagger.io/terms/",

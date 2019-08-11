@@ -16,7 +16,7 @@ var opts = {
 
 request = request.defaults(opts);
 function ConsultaPe() { }
-function getSunatInformation(html, callback) {
+function getSunatInformation(html, additional, callback) {
 	try {
 		var $ = cheerio.load(html);
 		var table = $("table").first().children("tr");
@@ -30,25 +30,27 @@ function getSunatInformation(html, callback) {
 		});
 		contribuyente.ruc = initData[0];
 		contribuyente.razonSocial = initData[1];
-		contribuyente.nombreComercial = table.eq(2).children().eq(1).text().split("-").map(function (splited) { return splited.trim(); }).join("-");
+		contribuyente.nombreComercial = table.eq(additional ? 3 : 2).children().eq(1).text().split("-").map(function (splited) { return splited.trim(); }).join("-");
 		contribuyente.tipo = table.eq(1).children().eq(1).text().trim();
-		contribuyente.estado = table.eq(4).children().eq(1).text().trim();
-		contribuyente.condicion = table.eq(5).children().eq(1).text().split("-").map(function (splited) { return splited.trim(); }).join("-");
-		contribuyente.direccion = table.eq(6).children().eq(1).text().split("-").map(function (splited) { return splited.trim(); }).join("-");
-		contribuyente.departamento = "";
-		contribuyente.provincia = "";
-		contribuyente.distrito = "";
-		contribuyente.fechaInscripcion = table.eq(3).children().eq(1).text().trim();
-		contribuyente.sistEmsion = table.eq(7).children().eq(1).text().trim();
-		contribuyente.sistContabilidad = table.eq(8).children().eq(1).text().trim();
-		contribuyente.actExterior = table.eq(7).children().eq(3).text().trim();
-		contribuyente.actEconomicas = table.eq(9).children().eq(1).children().eq(0).children().map(function () { return $(this).text().trim(); }).get();
-		contribuyente.cpPago = table.eq(10).children().eq(1).children().eq(0).children().map(function () { return $(this).text().trim(); }).get();
-		contribuyente.sistElectronica = table.eq(11).children().eq(1).children().eq(0).children().map(function () { return $(this).text().trim(); }).get()
-		contribuyente.fechaEmisorFe = table.eq(12).children().eq(1).text().trim();
-		contribuyente.cpeElectronico = table.eq(13).children().eq(1).map(function () { return $(this).text().split(",").map(function (splited) { return splited.trim(); }); }).get();
-		contribuyente.fechaPle = table.eq(14).children().eq(1).text().trim();
-		contribuyente.padrones = table.eq(15).children().eq(1).children().eq(0).children().map(function () { return $(this).text().trim(); }).get();
+		contribuyente.estado = table.eq(additional ? 5 : 4).children().eq(1).text().trim();
+		contribuyente.condicion = table.eq(additional ? 6 : 5).children().eq(1).text().split("-").map(function (splited) { return splited.trim(); }).join("-");
+		let direccion = table.eq(additional ? 7 : 6).children().eq(1).text().split("-").map(function (splited) { return splited.trim(); }).join("-");
+		var ubigeo = direccion.slice(direccion.lastIndexOf('  ')).trim().split('-');
+		contribuyente.direccion = direccion.slice(0, direccion.lastIndexOf('  ')).trim();
+		contribuyente.departamento = additional ? "" : ubigeo[0];
+		contribuyente.provincia = additional ? "" : ubigeo[1];
+		contribuyente.distrito = additional ? "" : ubigeo[2];
+		contribuyente.fechaInscripcion = table.eq(additional ? 4 : 3).children().eq(1).text().trim();
+		contribuyente.sistEmsion = table.eq(additional ? 8 : 7).children().eq(1).text().trim();
+		contribuyente.sistContabilidad = table.eq(additional ? 9 : 8).children().eq(1).text().trim();
+		contribuyente.actExterior = table.eq(additional ? 8 : 7).children().eq(3).text().trim();
+		contribuyente.actEconomicas = table.eq(additional ? 10 : 9).children().eq(1).children().eq(0).children().map(function () { return $(this).text().trim(); }).get();
+		contribuyente.cpPago = table.eq(additional ? 11 : 10).children().eq(1).children().eq(0).children().map(function () { return $(this).text().trim(); }).get();
+		contribuyente.sistElectronica = table.eq(additional ? 12 : 11).children().eq(1).children().eq(0).children().map(function () { return $(this).text().trim(); }).get()
+		contribuyente.fechaEmisorFe = table.eq(additional ? 13 : 12).children().eq(1).text().trim();
+		contribuyente.cpeElectronico = table.eq(additional ? 14 : 13).children().eq(1).map(function () { return $(this).text().split(",").map(function (splited) { return splited.trim(); }); }).get();
+		contribuyente.fechaPle = table.eq(additional ? 15 : 14).children().eq(1).text().trim();
+		contribuyente.padrones = table.eq(additional ? 16 : 15).children().eq(1).children().eq(0).children().map(function () { return $(this).text().trim(); }).get();
 		return callback(null, contribuyente, html);
 	} catch (e) {
 		return callback(e);
@@ -222,7 +224,7 @@ function getZipPage(rucs, cb) {
 
 }
 
-ConsultaPe.prototype.getSunatInformation = function (ruc, cb) {
+ConsultaPe.prototype.getSunatInformation = function (ruc, additional, cb) {
 	if (Array.isArray(ruc)) {
 		if (ruc.length < 1) {
 			return cb(null, []);
@@ -245,7 +247,7 @@ ConsultaPe.prototype.getSunatInformation = function (ruc, cb) {
 			if (err) {
 				return cb(err);
 			}
-			getSunatInformation(body, function (err, data) {
+			getSunatInformation(body, additional, function (err, data) {
 				if (err) {
 					return cb(err);
 				} else {
