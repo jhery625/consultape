@@ -1,4 +1,5 @@
 const consulta = require("./consulta.controller")
+const sunat = require("./sunat-tipocambio.controller")
 
 function searchRuc(req, res) {
     let additional = (req.params.ruc).trim().startsWith('1');
@@ -28,8 +29,29 @@ function searchDni(req, res) {
     });
 }
 
+function getSunatTipoCambio(req, res) {
+    sunat.getTipoCambio(req.params.year, req.params.month, function (error, data) {
+        if (error) {
+            res.status(500).send(error);
+        }
+        res.status(200).send(data);
+    });
+}
+function getSunatTipoCambioActual(req, res) {
+    sunat.getTipoCambioActual(function (error, data) {
+        if (error) {
+            res.status(500).send(error);
+        }
+        res.status(200).send(data);
+    });
+}
+
+
+
 module.exports = {
     searchRuc,
     searchDni,
-    searchMultiRuc
+    searchMultiRuc,
+    getSunatTipoCambio,
+    getSunatTipoCambioActual
 }

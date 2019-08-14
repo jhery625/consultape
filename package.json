@@ -26,7 +26,10 @@
     "express": "^4.17.1",
     "http": "0.0.0",
     "jszip": "^3.0.0",
+    "nodemon": "^1.19.1",
+    "puppeteer": "^1.19.0",
     "request": "^2.72.0",
+    "request-promise-native": "^1.0.7",
     "swagger-jsdoc": "^3.4.0",
     "swagger-ui-express": "^4.0.7"
   },

@@ -20,7 +20,7 @@ function getSunatInformation(html, additional, callback) {
 	try {
 		var $ = cheerio.load(html);
 		var table = $("table").first().children("tr");
-		var contribuyente = {};
+		var contribuyente = {};		
 		var rzhtml = table.first().children().eq(1).html();
 		if (!rzhtml) {
 			return callback(null, contribuyente);

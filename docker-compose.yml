@@ -1,0 +1,11 @@
+version: "3"
+services:
+  app:
+    container_name: consultape
+    image: node:12
+    restart: always
+    volumes:
+      - .:/opt/app
+      - /opt/app/node_modules
+    build: .
+    command: npm start

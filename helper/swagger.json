@@ -23,6 +23,10 @@
         {
             "name": "SUNAT",
             "description": "Superintendencia Nacional de Aduanas y de Administración Tributaria."
+        },
+        {
+            "name": "SBS",
+            "description": "Superintendencia de Banca, Seguros y AFP."
         }
     ],
     "schemes": [
@@ -118,6 +122,89 @@
                 }
             }
         },
+        "/public/api/tc-sunat/actual": {
+            "get": {
+                "tags": [
+                    "SUNAT"
+                ],
+                "summary": "TIPO CAMBIO",
+                "description": "Retorna tipo de cambio del dia",
+                "operationId": "getTipoCambio",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Operacion exitosa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/TipoCambioResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ruc invalido o no encontrado"
+                    }
+                }
+            }
+        },
+        "/public/api/tc-sunat/{year}/{month}": {
+            "get": {
+                "tags": [
+                    "SUNAT"
+                ],
+                "summary": "TIPO CAMBIO MENSUAL",
+                "description": "Retorna lista de tipo de cambio del mes",
+                "operationId": "getTipoCambioByMontYear",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "description": "Año Consulta",
+                        "required": true,
+                        "example": "2019",
+                        "schema": {
+                            "type": "integer",
+                            "minLength": 4,
+                            "maxLength": 4
+                        }
+                    },
+                    {
+                        "name": "month",
+                        "in": "path",
+                        "description": "Mes Consulta",
+                        "required": true,
+                        "example": "01",
+                        "schema": {
+                            "type": "integer",
+                            "minLength": 2,
+                            "maxLength": 2
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operacion exitosa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/TipoCambioResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Consulta invalido o no encontrado"
+                    }
+                }
+            }
+        },
         "/public/api/dni/{dni}": {
             "get": {
                 "tags": [
@@ -153,6 +240,60 @@
                     },
                     "404": {
                         "description": "Dni invalido o no encontrado"
+                    }
+                }
+            }
+        },
+        "/public/api/sbs/{year}/{month}": {
+            "get": {
+                "tags": [
+                    "SBS"
+                ],
+                "summary": "COMISIONES",
+                "description": "Retorna la lista de comsiones afp",
+                "operationId": "getByMontYear",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "description": "Año Consulta",
+                        "required": true,
+                        "example": "2019",
+                        "schema": {
+                            "type": "integer",
+                            "minLength": 4,
+                            "maxLength": 4
+                        }
+                    },
+                    {
+                        "name": "month",
+                        "in": "path",
+                        "description": "Mes Consulta",
+                        "required": true,
+                        "example": "01",
+                        "schema": {
+                            "type": "integer",
+                            "minLength": 2,
+                            "maxLength": 2
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operacion exitosa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/ComisionPrimaResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Consulta invalido o no encontrado"
                     }
                 }
             }
@@ -268,6 +409,22 @@
                 }
             }
         },
+        "TipoCambioResponse":{
+            "type": "object",
+            "properties": {
+                "dia": {
+                    "type": "integer"
+                },
+                "compra": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "venta": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
         "DniResponse": {
             "type": "object",
             "properties": {
@@ -286,6 +443,42 @@
                 },
                 "codVerifica": {
                     "type": "string"
+                }
+            }
+        },
+        "ComisionPrimaResponse": {
+            "type": "object",
+            "properties": {
+                "nombreComision": {
+                    "type": "string"
+                },
+                "comisionFija": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "comisionSobreFlujo": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "comisionSobreFlujoMixta": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "comisionAnualMixta": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "primaSeguro": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "aporteObligatorio": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "remuneracionMaxima": {
+                    "type": "integer",
+                    "format": "int64"
                 }
             }
         }
