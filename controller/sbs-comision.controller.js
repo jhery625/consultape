@@ -1,5 +1,4 @@
 'use strict'
-//const url = process.env.URL_PRIMA_SBS;
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 
@@ -9,13 +8,16 @@ async function ComisionSbs(req, res) {
     let periodo = (req.params.year).padStart(4, '0') + "-" + (req.params.month).padStart(2, '0');
 
     const browser = await puppeteer.launch({
+        headless: false,
         'args': [
+            '--start-maximized',
             '--no-sandbox',
             '--disable-setuid-sandbox'
         ]
     });
     const page = await browser.newPage();
-    await page.goto('https://www.sbs.gob.pe/app/spp/empleadores/comisiones_spp/Paginas/comision_prima.aspx');
+    await page.goto(process.env.URL_PRIMA_SBS, {timeout: 0});
+    await page.waitFor(1000);
     await page.type('#cboPeriodo', periodo);
     await page.click('input[type="submit"]');
     await page.waitForSelector('.JER_filaContenido');
@@ -38,9 +40,9 @@ async function ComisionSbs(req, res) {
             });
             i = i + 7;
         }
-    }
-    res.status(200).send({ items: models });
+    }   
     await browser.close();  
+    res.status(200).send({ items: models });
 }
 module.exports = {
     ComisionSbs
