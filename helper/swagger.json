@@ -1,9 +1,9 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Consultas de DNI y RUC - **Perú**",
+        "description": "Consultas de DNI , RUC, TIPO CAMBIO, COMISION PRIMA AFP - **Perú**",
         "version": "1.0.0",
-        "title": "Consulta Ruc y Dni - Perú",
+        "title": "Consulta Ruc, Dni, Tipo Cambio, Comisiones Prima SBS - Perú",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "Alex Pariona",

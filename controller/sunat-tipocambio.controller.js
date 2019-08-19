@@ -1,7 +1,7 @@
 const request = require('request-promise-native');
 const cheerio = require('cheerio');
 
-const URL = 'http://www.sunat.gob.pe/cl-at-ittipcam/tcS01Alias';
+const URL = process.env.URL_SUNAT_TC;
 
 function SunatTipoCambio() { }
 

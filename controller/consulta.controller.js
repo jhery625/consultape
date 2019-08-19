@@ -20,7 +20,7 @@ function getSunatInformation(html, additional, callback) {
 	try {
 		var $ = cheerio.load(html);
 		var table = $("table").first().children("tr");
-		var contribuyente = {};		
+		var contribuyente = {};
 		var rzhtml = table.first().children().eq(1).html();
 		if (!rzhtml) {
 			return callback(null, contribuyente);
@@ -58,7 +58,8 @@ function getSunatInformation(html, additional, callback) {
 }
 
 function getReniecInformation(dni, callback) {
-	http.get('http://aplicaciones007.jne.gob.pe/srop_publico/Consulta/Afiliado/GetNombresCiudadano?DNI=' + dni, (response) => {
+	var BASE = process.env.URL_RENIEC;
+	http.get(BASE + '?DNI=' + dni, (response) => {
 		let data = '';
 		let persona = {};
 		response.on('data', (chunk) => {
@@ -91,7 +92,7 @@ function getCaptcha(base, cb) {
 }
 
 function getHtmlPage(ruc, cb) {
-	var BASE = "http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc";
+	var BASE = process.env.URL_SUNAT;//"http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc";
 	var RUC_URL = BASE + "/jcrS00Alias";
 	getCaptcha(BASE, function (err, captcha) {
 		request.post(RUC_URL, {
@@ -194,7 +195,7 @@ function parseCsv(csv, callback) {
 }
 
 function getZipPage(rucs, cb) {
-	var BASE = "http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsmulruc";
+	var BASE = process.env.URL_SUNAT_CVS;//"http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsmulruc";
 	var RUC_URL = BASE + "/jrmS00Alias";
 	async.waterfall([
 		async.constant(BASE),
