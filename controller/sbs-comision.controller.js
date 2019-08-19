@@ -1,5 +1,5 @@
 'use strict'
-const url = process.env.URL_PRIMA_SBS;
+//const url = process.env.URL_PRIMA_SBS;
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 
@@ -15,7 +15,7 @@ async function ComisionSbs(req, res) {
         ]
     });
     const page = await browser.newPage();
-    await page.goto(url);
+    await page.goto('https://www.sbs.gob.pe/app/spp/empleadores/comisiones_spp/Paginas/comision_prima.aspx');
     await page.type('#cboPeriodo', periodo);
     await page.click('input[type="submit"]');
     await page.waitForSelector('.JER_filaContenido');
