@@ -29,6 +29,15 @@ function searchDni(req, res) {
     });
 }
 
+function searchEssaluedDni(req, res) {
+    consulta.getEssaludInformation(req.params.dni, function (error, data) {
+        if (error) {
+            res.status(500).send(error);
+        }
+        res.status(200).send(data);
+    });
+}
+
 function getSunatTipoCambio(req, res) {
     sunat.getTipoCambio(req.params.year, req.params.month, function (error, data) {
         if (error) {
@@ -46,11 +55,10 @@ function getSunatTipoCambioActual(req, res) {
     });
 }
 
-
-
 module.exports = {
     searchRuc,
     searchDni,
+    searchEssaluedDni,
     searchMultiRuc,
     getSunatTipoCambio,
     getSunatTipoCambioActual

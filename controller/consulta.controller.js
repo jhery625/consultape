@@ -4,6 +4,7 @@ const cheerio = require("cheerio");
 const async = require("async");
 const jszip = require("jszip");
 const http = require('http');
+const https = require('https');
 
 var opts = {
 	jar: true,
@@ -16,6 +17,48 @@ var opts = {
 
 request = request.defaults(opts);
 function ConsultaPe() { }
+
+function getEssaludInformation(dni, callback) {
+	var BASE = process.env.URL_ESSALUD;
+	https.get(BASE + '?strDni=' + dni, (response) => {
+		let data = '';
+		let persona = {};
+		response.on('data', (chunk) => {
+			data += chunk;
+		});
+		response.on('end', () => {
+			var datos = JSON.parse(data);
+			var d = datos.DatosPerson[0];
+			persona.dni = d.DNI;
+			persona.nombres = d.Nombres;
+			persona.apellidoPaterno = d.ApellidoPaterno;
+			persona.apellidoMaterno = d.ApellidoMaterno;
+			persona.fechaNacimiento = parseISOString(d.FechaNacimiento);
+			if (d.Sexo === '2')
+				persona.sexo = "MASCULINO";
+			else
+				persona.sexo = "FEMENINO"
+			persona.codVerifica = '';
+			return callback(null, persona);
+		});
+	}).on("error", (err) => {
+		return callback(err);
+	});
+}
+
+function parseISOString(stringDate) {
+	if (!stringDate) {
+		return null;
+	}
+	var d = stringDate.split(/\D+/);
+	if (d.length > 2) {
+		return new Date(Date.parse(d[1] + "/" + d[0] + "/" + d[2])).toISOString();
+	}
+	else {
+		return null;
+	}
+}
+
 function getSunatInformation(html, additional, callback) {
 	try {
 		var $ = cheerio.load(html);
@@ -40,16 +83,16 @@ function getSunatInformation(html, additional, callback) {
 		contribuyente.departamento = additional ? "" : ubigeo[0];
 		contribuyente.provincia = additional ? "" : ubigeo[1];
 		contribuyente.distrito = additional ? "" : ubigeo[2];
-		contribuyente.fechaInscripcion = table.eq(additional ? 4 : 3).children().eq(1).text().trim();
+		contribuyente.fechaInscripcion = parseISOString(table.eq(additional ? 4 : 3).children().eq(1).text().trim());
 		contribuyente.sistEmsion = table.eq(additional ? 8 : 7).children().eq(1).text().trim();
 		contribuyente.sistContabilidad = table.eq(additional ? 9 : 8).children().eq(1).text().trim();
 		contribuyente.actExterior = table.eq(additional ? 8 : 7).children().eq(3).text().trim();
 		contribuyente.actEconomicas = table.eq(additional ? 10 : 9).children().eq(1).children().eq(0).children().map(function () { return $(this).text().trim(); }).get();
 		contribuyente.cpPago = table.eq(additional ? 11 : 10).children().eq(1).children().eq(0).children().map(function () { return $(this).text().trim(); }).get();
 		contribuyente.sistElectronica = table.eq(additional ? 12 : 11).children().eq(1).children().eq(0).children().map(function () { return $(this).text().trim(); }).get()
-		contribuyente.fechaEmisorFe = table.eq(additional ? 13 : 12).children().eq(1).text().trim();
+		contribuyente.fechaEmisorFe = parseISOString(table.eq(additional ? 13 : 12).children().eq(1).text().trim());
 		contribuyente.cpeElectronico = table.eq(additional ? 14 : 13).children().eq(1).map(function () { return $(this).text().split(",").map(function (splited) { return splited.trim(); }); }).get();
-		contribuyente.fechaPle = table.eq(additional ? 15 : 14).children().eq(1).text().trim();
+		contribuyente.fechaPle = parseISOString(table.eq(additional ? 15 : 14).children().eq(1).text().trim());
 		contribuyente.padrones = table.eq(additional ? 16 : 15).children().eq(1).children().eq(0).children().map(function () { return $(this).text().trim(); }).get();
 		return callback(null, contribuyente, html);
 	} catch (e) {
@@ -261,6 +304,16 @@ ConsultaPe.prototype.getSunatInformation = function (ruc, additional, cb) {
 
 ConsultaPe.prototype.getJneInformation = function (dni, cb) {
 	getReniecInformation(dni, function (err, data) {
+		if (err) {
+			return cb(err);
+		} else {
+			return cb(null, data);
+		}
+	});
+}
+
+ConsultaPe.prototype.getEssaludInformation = function (dni, cb) {
+	getEssaludInformation(dni, function (err, data) {
 		if (err) {
 			return cb(err);
 		} else {

@@ -19,6 +19,10 @@
         {
             "name": "RENIEC",
             "description": "Registro Nacional de Identificación y Estado Civil."
+        },        
+        {
+            "name": "ESSALUD",
+            "description": "Seguro Social de Salud del Perú."
         },
         {
             "name": "SUNAT",
@@ -34,7 +38,7 @@
         "http"
     ],
     "paths": {
-        "/public/api/ruc/{ruc}": {
+        "/public/api/sunat/ruc/{ruc}": {
             "get": {
                 "tags": [
                     "SUNAT"
@@ -76,7 +80,7 @@
                 }
             }
         },
-        "/public/api/ruc": {
+        "/public/api/sunat/ruc": {
             "post": {
                 "tags": [
                     "SUNAT"
@@ -205,7 +209,7 @@
                 }
             }
         },
-        "/public/api/dni/{dni}": {
+        "/public/api/jne/dni/{dni}": {
             "get": {
                 "tags": [
                     "RENIEC"
@@ -234,6 +238,45 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/definitions/DniResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Dni invalido o no encontrado"
+                    }
+                }
+            }
+        },
+        "/public/api/essalud/dni/{dni}": {
+            "get": {
+                "tags": [
+                    "ESSALUD"
+                ],
+                "summary": "DNI",
+                "description": "Retorna informacion segun el dni",
+                "operationId": "getEssaludByDni",
+                "parameters": [
+                    {
+                        "name": "dni",
+                        "in": "path",
+                        "description": "Dni de la persona",
+                        "required": true,
+                        "example": "46658592",
+                        "schema": {
+                            "type": "string",
+                            "minLength": 8,
+                            "maxLength": 8
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operacion exitosa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/DniEssaludResponse"
                                 }
                             }
                         }
@@ -439,6 +482,34 @@
                     "type": "string"
                 },
                 "apellidoMaterno": {
+                    "type": "string"
+                },
+                "codVerifica": {
+                    "type": "string"
+                }
+            }
+        },
+        "DniEssaludResponse": {
+            "type": "object",
+            "properties": {
+                "dni": {
+                    "type": "string",
+                    "example": "00000001"
+                },
+                "nombres": {
+                    "type": "string"
+                },
+                "apellidoPaterno": {
+                    "type": "string"
+                },
+                "apellidoMaterno": {
+                    "type": "string"
+                },
+                "fechaNacimiento": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "sexo": {
                     "type": "string"
                 },
                 "codVerifica": {
