@@ -2,39 +2,23 @@
   "name": "consultape",
   "version": "1.0.0",
   "description": "A simple scraper to get RUC information from SUNAT and DNI information from JNE.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node index.js",
-    "startb": "nodemon server",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/surenperu/consultape.git"
+    "start": "node ./src/index.js"
   },
   "author": "Alex Pariona",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/surenperu/consultape.git/issues"
-  },
-  "homepage": "https://github.com/surenperu/consultape#readme",
   "dependencies": {
     "async": "^2.0.0-rc.5",
     "cheerio": "^0.20.0",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
-    "http": "0.0.0",
     "jszip": "^3.0.0",
-    "nodemon": "^1.19.1",
     "puppeteer": "^1.19.0",
     "request": "^2.72.0",
     "request-promise-native": "^1.0.7",
     "swagger-jsdoc": "^3.4.0",
     "swagger-ui-express": "^4.0.7"
-  },
-  "devDependencies": {
-    "chai": "^3.5.0",
-    "mocha": "^2.4.5"
   }
 }

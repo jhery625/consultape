@@ -38,7 +38,7 @@ function getEssaludInformation(dni, callback) {
 				persona.sexo = "MASCULINO";
 			else
 				persona.sexo = "FEMENINO"
-			persona.codVerifica = '';
+			persona.codVerifica = getCode(d.DNI);
 			return callback(null, persona);
 		});
 	}).on("error", (err) => {
@@ -57,6 +57,26 @@ function parseISOString(stringDate) {
 	else {
 		return null;
 	}
+}
+
+function getCode(dni) {
+	if (dni != "" || dni != null || dni.length == 8) {
+		const hash = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
+		let suma = 5;
+		for (var i = 2; i < 10; i++) {
+			suma += (parseInt(dni.charAt(i - 2)) * hash[i]);
+		}
+		const entero = parseInt(suma / 11);
+		let digito = 11 - (suma - entero * 11);
+		if (digito == 10) {
+			digito = 0;
+		}
+		else if (digito == 11) {
+			digito = 1;
+		}
+		return digito;
+	}
+	return "";
 }
 
 function getSunatInformation(html, additional, callback) {
@@ -114,7 +134,7 @@ function getReniecInformation(dni, callback) {
 			persona.nombres = d[2];
 			persona.apellidoPaterno = d[0];
 			persona.apellidoMaterno = d[1];
-			persona.codVerifica = '';
+			persona.codVerifica = getCode(dni);
 			return callback(null, persona);
 		});
 	}).on("error", (err) => {
@@ -135,7 +155,7 @@ function getCaptcha(base, cb) {
 }
 
 function getHtmlPage(ruc, cb) {
-	var BASE = process.env.URL_SUNAT;//"http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc";
+	var BASE = process.env.URL_SUNAT;
 	var RUC_URL = BASE + "/jcrS00Alias";
 	getCaptcha(BASE, function (err, captcha) {
 		request.post(RUC_URL, {
@@ -238,7 +258,7 @@ function parseCsv(csv, callback) {
 }
 
 function getZipPage(rucs, cb) {
-	var BASE = process.env.URL_SUNAT_CVS;//"http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsmulruc";
+	var BASE = process.env.URL_SUNAT_CVS;
 	var RUC_URL = BASE + "/jrmS00Alias";
 	async.waterfall([
 		async.constant(BASE),
