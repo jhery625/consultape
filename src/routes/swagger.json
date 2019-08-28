@@ -80,6 +80,48 @@
                 }
             }
         },
+        "/public/api/sunat/dni/{dni}": {
+            "get": {
+                "tags": [
+                    "SUNAT"
+                ],
+                "summary": "DNI",
+                "description": "Retorna información segun el dni",
+                "operationId": "getByDni",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "dni",
+                        "in": "path",
+                        "description": "DNI Persona Natural",
+                        "required": true,
+                        "example": "10007097",
+                        "schema": {
+                            "type": "string",
+                            "minLength": 8,
+                            "maxLength": 8
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operacion exitosa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/RucResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Dni invalido o no encontrado"
+                    }
+                }
+            }
+        },
         "/public/api/sunat/ruc": {
             "post": {
                 "tags": [

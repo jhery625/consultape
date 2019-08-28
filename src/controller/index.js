@@ -10,6 +10,14 @@ function searchRuc(req, res) {
         res.status(200).send(data);
     });
 }
+function searchSunatDni(req, res) {
+    consulta.getSunatDniInformation(req.params.dni, function (error, data) {
+        if (error) {
+            res.status(500).send(error);
+        }
+        res.status(200).send(data);
+    });
+}
 
 function searchMultiRuc(req, res) {
     consulta.getSunatInformation(req.body, true, function (error, data) {
@@ -65,6 +73,7 @@ function getSunatTipoCambioActual(req, res) {
 
 module.exports = {
     searchRuc,
+    searchSunatDni,
     searchDni,
     searchEssaludDni,
     searchMultiRuc,

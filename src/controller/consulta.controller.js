@@ -322,6 +322,24 @@ ConsultaPe.prototype.getSunatInformation = function (ruc, additional, cb) {
 	}
 };
 
+ConsultaPe.prototype.getSunatDniInformation = function (dni, cb) {
+	let digito = getCode(dni);
+	let ruc = "10".concat(dni, digito);
+	getHtmlPage(ruc, function (err, body) {
+		if (err) {
+			return cb(err);
+		}
+		getSunatInformation(body, true, function (err, data) {
+			if (err) {
+				return cb(err);
+			} else {
+				return cb(null, data, body);
+			}
+		});
+	});
+
+};
+
 ConsultaPe.prototype.getJneInformation = function (dni, cb) {
 	getReniecInformation(dni, function (err, data) {
 		if (err) {

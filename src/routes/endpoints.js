@@ -8,6 +8,7 @@ const initializeEndPoints = (app) => {
     //sunat
     app.post("/public/api/sunat/ruc", consulta.searchMultiRuc); 
     app.get("/public/api/sunat/ruc/:ruc", consulta.searchRuc);
+    app.get("/public/api/sunat/dni/:dni", consulta.searchSunatDni);
     app.get("/public/api/tc-sunat/actual", consulta.getSunatTipoCambioActual);
     app.get("/public/api/tc-sunat/:year/:month", consulta.getSunatTipoCambio);
     app.get("/public/api/tc-sunat/:year/:month/:day", consulta.getSunatTipoCambioPorDia);
