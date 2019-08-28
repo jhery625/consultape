@@ -9,9 +9,7 @@ async function ComisionSbs(req, res) {
         let periodo = (req.params.year).padStart(4, '0') + "-" + (req.params.month).padStart(2, '0');
 
         const browser = await puppeteer.launch({
-            headless: false,
             'args': [
-                '--start-maximized',
                 '--no-sandbox',
                 '--disable-setuid-sandbox'
             ]
