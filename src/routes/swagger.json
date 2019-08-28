@@ -19,7 +19,7 @@
         {
             "name": "RENIEC",
             "description": "Registro Nacional de Identificación y Estado Civil."
-        },        
+        },
         {
             "name": "ESSALUD",
             "description": "Seguro Social de Salud del Perú."
@@ -150,7 +150,7 @@
                         }
                     },
                     "404": {
-                        "description": "Ruc invalido o no encontrado"
+                        "description": "Tasa Cambio invalido o no encontrado"
                     }
                 }
             }
@@ -183,6 +183,72 @@
                         "name": "month",
                         "in": "path",
                         "description": "Mes Consulta",
+                        "required": true,
+                        "example": "01",
+                        "schema": {
+                            "type": "integer",
+                            "minLength": 2,
+                            "maxLength": 2
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operacion exitosa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/TipoCambioResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Consulta invalido o no encontrado"
+                    }
+                }
+            }
+        },
+        "/public/api/tc-sunat/{year}/{month}/{day}": {
+            "get": {
+                "tags": [
+                    "SUNAT"
+                ],
+                "summary": "TIPO CAMBIO POR DIA",
+                "description": "Retorna el tipo de cambio del dia",
+                "operationId": "getTipoCambioByDayMontYear",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "description": "Año Consulta",
+                        "required": true,
+                        "example": "2019",
+                        "schema": {
+                            "type": "integer",
+                            "minLength": 4,
+                            "maxLength": 4
+                        }
+                    },
+                    {
+                        "name": "month",
+                        "in": "path",
+                        "description": "Mes Consulta",
+                        "required": true,
+                        "example": "01",
+                        "schema": {
+                            "type": "integer",
+                            "minLength": 2,
+                            "maxLength": 2
+                        }
+                    },
+                    {
+                        "name": "day",
+                        "in": "path",
+                        "description": "Dia Consulta",
                         "required": true,
                         "example": "01",
                         "schema": {
@@ -452,7 +518,7 @@
                 }
             }
         },
-        "TipoCambioResponse":{
+        "TipoCambioResponse": {
             "type": "object",
             "properties": {
                 "dia": {

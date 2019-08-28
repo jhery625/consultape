@@ -29,7 +29,7 @@ function searchDni(req, res) {
     });
 }
 
-function searchEssaluedDni(req, res) {
+function searchEssaludDni(req, res) {
     consulta.getEssaludInformation(req.params.dni, function (error, data) {
         if (error) {
             res.status(500).send(error);
@@ -38,6 +38,14 @@ function searchEssaluedDni(req, res) {
     });
 }
 
+function getSunatTipoCambioPorDia(req, res) {
+    sunat.getTipoCambioPorDia(req.params.year, req.params.month, req.params.day, function (error, data) {
+        if (error) {
+            res.status(500).send(error);
+        }
+        res.status(200).send(data);
+    });
+}
 function getSunatTipoCambio(req, res) {
     sunat.getTipoCambio(req.params.year, req.params.month, function (error, data) {
         if (error) {
@@ -58,8 +66,9 @@ function getSunatTipoCambioActual(req, res) {
 module.exports = {
     searchRuc,
     searchDni,
-    searchEssaluedDni,
+    searchEssaludDni,
     searchMultiRuc,
     getSunatTipoCambio,
-    getSunatTipoCambioActual
+    getSunatTipoCambioActual,
+    getSunatTipoCambioPorDia
 }

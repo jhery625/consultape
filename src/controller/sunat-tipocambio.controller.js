@@ -24,6 +24,16 @@ SunatTipoCambio.prototype.getTipoCambioActual = function (cb) {
     });
 }
 
+SunatTipoCambio.prototype.getTipoCambioPorDia = function (ejercicio, periodo, dia, cb) {
+    getTipoCambioPorDia(ejercicio, periodo, dia, function (err, data) {
+        if (err) {
+            return cb(err);
+        } else {
+            return cb(null, data);
+        }
+    });
+}
+
 async function getTipoCambioActual(callback) {
     try {
         let html = await request(URL);
@@ -38,6 +48,23 @@ async function getTipoCambioActual(callback) {
     } catch (err) {
         return callback(err);
     }
+};
+
+async function getTipoCambioPorDia(ejercicio, periodo, dia, callback) {
+    getTipoCambio(ejercicio, periodo, function (err, data) {
+        if (err) {
+            return callback(err);
+        } else {
+            let d = data.filter(t => t.dia <= dia);
+            const model = d[d.length - 1];
+            const date = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Lima' }));         
+            if (date.getDate() >= dia) {
+                return callback(null, model);
+            } else {
+                return callback(null, {});
+            }
+        }
+    });
 };
 
 async function getTipoCambio(ejercicio, periodo, callback) {
